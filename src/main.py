@@ -1,6 +1,7 @@
 from enum import Enum
 import os
 import torch
+from model import BigramModel
 
 
 # HYPERPARAMETERS
@@ -45,11 +46,16 @@ def main():
         return x, y
 
 
-    xb, yb = get_batch(Split.TRAINING)
+    # xb, yb = get_batch(Split.TRAINING)
     
-    for i_seq in range(len(xb)):
-        for i_token in range(len(xb[i_seq])):
-            print(f"When input is {xb[i_seq][:i_token + 1]} target is {yb[i_seq][i_token]}")
+    # for i_seq in range(len(xb)):
+    #     for i_token in range(len(xb[i_seq])):
+    #         print(f"When input is {xb[i_seq][:i_token + 1]} target is {yb[i_seq][i_token]}")
+
+    model = BigramModel(vocab_size)
+    start_x = torch.tensor([[0]], dtype=torch.long)
+    tokens = model.generate(start_x, 100)
+    print(decode(tokens.tolist()[0]))
 
     
 
