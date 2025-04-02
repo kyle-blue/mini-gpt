@@ -5,14 +5,20 @@ from model import BigramModel
 
 
 # HYPERPARAMETERS
-
 torch.manual_seed(1234)
 batch_size = 4
 block_size = 8
+training_iters = 10000
+eval_iters = 50
+embedding_size = 32
 
 class Split(Enum):
     TRAINING = "training"
     VALIDATION = "validation"
+
+
+def evaluate_loss():
+    pass
 
 
 def main():
@@ -54,6 +60,21 @@ def main():
 
     model = BigramModel(vocab_size)
     start_x = torch.tensor([[0]], dtype=torch.long)
+
+    optimiser = torch.optim.AdamW(model.parameters())
+
+    for i in range(training_iters):
+        xb, yb = get_batch(Split.TRAINING)
+        logits, loss = model.forward(xb, yb)
+        optimiser.zero_grad(set_to_none=True)
+        loss.backward()
+        optimiser.step()
+
+        if i % eval_iters == 0:
+            print(loss.item())
+        
+
+
     tokens = model.generate(start_x, 100)
     print(decode(tokens.tolist()[0]))
 
