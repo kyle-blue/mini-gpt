@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Kyle Doidge <kyle.blue.doidge@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "3.12.9"
@@ -11,9 +12,7 @@ torch = "^2.6.0"
 numpy = "^2.2.4"
 
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.15.0"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
