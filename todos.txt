@@ -1,0 +1,8 @@
+- Finish mini shakespeare tutorial video
+- Finish gpt2 tutorial video
+- Free recall, make notes on them
+- Learn numpy properly with a project:
+    - Go through the numpy tutorial series
+    - Create an image manipulation project with numpy possibly using imageio
+      - Make a cli tool for cropping, downscaling, changing hue / saturation values, blurring, sharpening.
+      - See how far you can get in 2 DAYS

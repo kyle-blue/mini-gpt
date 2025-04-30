@@ -1,24 +1,21 @@
-import os
-
 from typing import List, Tuple, cast
 from enum import Enum
 
 import torch
 from torch._prims_common import Tensor
 
-from model import BigramModel
-
-torch.manual_seed(1234)
-
-# HYPERPARAMETERS
-batch_size = 32
-block_size = 8
-training_iters = 10000
-eval_iters = 100
-eval_interval = 500
-embedding_size = 32
-learning_rate = 1e-2
-device = "cuda" if torch.cuda.is_available() else "cpu"
+from model import SelfAttentionModel
+from params import (
+    data_text,
+    batch_size,
+    chars,
+    block_size,
+    device,
+    eval_interval,
+    eval_iters,
+    learning_rate,
+    training_iters,
+)
 
 
 class Split(Enum):
@@ -27,15 +24,6 @@ class Split(Enum):
 
 
 def main():
-    data_path = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "../data/tiny-shakespeare.txt")
-    )
-    with open(data_path, "r") as file:
-        data_text = file.read()
-
-    chars = sorted(list(set(data_text)))
-    vocab_size = len(chars)
-
     # Extremely simple character level tokenizer
     stoi = {c: i for i, c in enumerate(chars)}
     itos = {i: c for i, c in enumerate(chars)}
@@ -78,12 +66,12 @@ def main():
         y = torch.stack([data[i + 1 : i + block_size + 1] for i in ix]).to(device)
         return x, y
 
-    model = BigramModel(vocab_size)
+    model = SelfAttentionModel()
     model = model.to(device)
     optimiser = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
     for i in range(training_iters):
-        if i % eval_iters == 0:
+        if i % eval_interval == 0:
             losses = estimate_loss()
             print(
                 f"Training: {losses[Split.TRAINING]:.4f} --- Validation: {losses[Split.VALIDATION]:.4f}"
@@ -95,7 +83,7 @@ def main():
         loss.backward()
         optimiser.step()
 
-    start_x = torch.tensor([[0]], dtype=torch.long, device=device)
+    start_x = torch.zeros((1, 1), dtype=torch.long, device=device)
     tokens = model.generate(start_x, 100)
     print(decode(tokens.tolist()[0]))
 
