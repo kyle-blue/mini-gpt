@@ -1,0 +1,40 @@
+Random notes
+
+# In order to generate more accurate tokens by validating and ranking outcomes:
+- Beaming and top-p
+- Candidate reranking (using a separate bi directional ranking model, possibly like BERT)
+- Using fine tuned embeddings model as rankers? 
+- Delegating to expert or fine tuned models for info (MoE or Mixture of Experts)
+
+
+- Lossless compression of model weights is an area of active research (so we can run very large models on very small machines)
+- Lossy compression is also very good, e.g. quantization of model weigths, but comes at a slight cost
+
+
+maybe the REAL future direction:
+Is not just similating what individuals do to replicate thought,
+but simulating communities, a bit like in MoE models.
+
+Creating a sort of conversation, where models / experts continuously generate, and revalidate one another, keeping the best ideas, then refeeding them into the correct models as training data.
+This, combined with real world or online access as a test ground, to also validate these adeas, not just through ranking, could create real life automatic idea generation and evolution,
+
+
+
+###
+Other notes:
+Using softmax on the wei (attention block) makes use of exponentials, so more extreme values become more amplified
+This can be good in some cases, where when generating values, we want them to be more predetermined and right.
+But what about when what is right is more relaxed? Or when we want to explore what is right?
+It would still output correct things, but be less consistent in the way it says it.
+This might be good for trading or other things where we are likely to make use of candidate re-ranking.
+Our results might be a little more varied.
+
+###
+More startup ideas:
+Anything involving prediction, and involved communication of previous tokens to the most recent, apply LLMs to them!
+e.g. where will I go next? Predicting the next gene? Predicting
+sentiment analysis
+
+encoder decoder transformers - likely used for generating different output like audio
+the keys come from x, but y queries and values come from somewhere else.
+This is called cross attention
