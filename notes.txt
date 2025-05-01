@@ -38,3 +38,19 @@ sentiment analysis
 encoder decoder transformers - likely used for generating different output like audio
 the keys come from x, but y queries and values come from somewhere else.
 This is called cross attention
+
+
+#### 
+
+Multi headed attention:
+
+
+Multi headed attention is where we use multiple smaller Attention Heads in parallel (which would amount to the size of the original solo attention head), then simply combining / concatenating the output vectors
+The line of reasoning here is that each head will likely specialise / diversify, and when combined, the overall output will be more balanced, and rich in the encoded info.
+
+In terms of the concern whereby the heads might converge to the same local minima, the randomised start weights will help with this, but the fact that these are also being combined and fed into other linear layers which will choose to weight each head differently in its own output, alongside the fact that backprogogation will seek to minimize the cost function means that diversification will happen if it benefits the cost function.
+
+Additionally, this concept can be applied to many other areas of machine learning. E.g. Used simply in deep learning networks for the same reason to improve generalization
+
+You can add to this concept, giving each subnetwork different data views, or different input params, and different shapes
+Or combine networks that use different algorithms (stacking), or Boosting (e.g., AdaBoost, Gradient Boosting Machines)

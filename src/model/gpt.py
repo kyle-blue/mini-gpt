@@ -7,7 +7,7 @@ from torch.nn import functional as F
 from params import vocab_size, embedding_dim, block_size, device
 
 
-class SelfAttentionModel(nn.Module):
+class GPT(nn.Module):
     def __init__(self):
         super().__init__()
         self.embedding_table = nn.Embedding(vocab_size, embedding_dim)

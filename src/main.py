@@ -4,7 +4,7 @@ from enum import Enum
 import torch
 from torch._prims_common import Tensor
 
-from model import SelfAttentionModel
+from model.gpt import GPT
 from params import (
     data_text,
     batch_size,
@@ -66,7 +66,7 @@ def main():
         y = torch.stack([data[i + 1 : i + block_size + 1] for i in ix]).to(device)
         return x, y
 
-    model = SelfAttentionModel()
+    model = GPT()
     model = model.to(device)
     optimiser = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
