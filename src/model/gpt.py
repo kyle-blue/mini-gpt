@@ -4,19 +4,18 @@ import torch
 # Module with the building blocks for graphs (nns are actually DAGS)
 from torch import nn
 from torch.nn import functional as F
-from model.attention_head import AttentionHead
-from params import vocab_size, embedding_dim, block_size, device, combined_head_size
+from model.attention_head import MultiHeadAttention
+from params import vocab_size, n_embed, block_size, device, num_heads
 
 
 class GPT(nn.Module):
     def __init__(self):
         super().__init__()
-        self.embedding_table = nn.Embedding(vocab_size, embedding_dim)
-        self.positional_embedding_table = nn.Embedding(block_size, embedding_dim)
+        self.embedding_table = nn.Embedding(vocab_size, n_embed)
+        self.positional_embedding_table = nn.Embedding(block_size, n_embed)
 
-        self.attention_head = AttentionHead(combined_head_size)
-        # Final linear layer to convert outputs into logits
-        self.lm_head = nn.Linear(combined_head_size, vocab_size)
+        self.mha_head = MultiHeadAttention(num_heads, n_embed // num_heads)
+        self.lm_head = nn.Linear(n_embed, vocab_size)
 
     def forward(self, batch_x: torch.Tensor, batch_y: Optional[torch.Tensor]):
         B, T = batch_x.shape
@@ -38,7 +37,7 @@ class GPT(nn.Module):
         # B, T, C   +   T, C   = B, T, C  (torch does broadcasting)
         summed_embeddings = embeddings + pos_embeddings
 
-        values = self.attention_head.forward(summed_embeddings)
+        values = self.mha_head.forward(summed_embeddings)
         logits = self.lm_head.forward(values)
 
         if batch_y is None:

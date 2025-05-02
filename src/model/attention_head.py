@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from params import embedding_dim, block_size
+from params import n_embed, block_size
 
 
 class AttentionHead(torch.nn.Module):
@@ -8,9 +8,9 @@ class AttentionHead(torch.nn.Module):
 
     def __init__(self, head_size: int):
         super().__init__()
-        self.key_layer = nn.Linear(embedding_dim, head_size)
-        self.query_layer = nn.Linear(embedding_dim, head_size)
-        self.value_layer = nn.Linear(embedding_dim, head_size)
+        self.key_layer = nn.Linear(n_embed, head_size)
+        self.query_layer = nn.Linear(n_embed, head_size)
+        self.value_layer = nn.Linear(n_embed, head_size)
         self.register_buffer("tril", torch.tril(torch.ones(block_size, block_size)))
 
     def forward(self, batch_x: torch.Tensor):
@@ -28,3 +28,15 @@ class AttentionHead(torch.nn.Module):
         out = wei @ values
 
         return out
+
+
+class MultiHeadAttention(torch.nn.Module):
+    def __init__(self, num_heads: int, head_size: int):
+        super().__init__()
+        self.heads = torch.nn.ModuleList(
+            [AttentionHead(head_size) for _ in range(num_heads)]
+        )
+
+    def forward(self, batch_x: torch.Tensor):
+        output = torch.cat([head.forward(batch_x) for head in self.heads], dim=-1)
+        return output
