@@ -1,3 +1,16 @@
+Things to Learn:
+
+- Backpropogation (Andrej Karpathy has a video on this, maybe just watch all his videos, theyre golden)
+- Batch and Layer normalisation
+- THEN move on to GPT 2 video
+- More recent GPT hacks and advances (many of which are shown openly by deepseek)
+- Might be useful to breifly go over previously learned things with a fresh, core, and much deeper understanding e.g. RNNs, Convnets, Simple MLP, Encoder Decoders
+(MAKE SURE TO ALWAYS TEST PRACTICALLY, IT ACTUALLY DOESN'T TAKE THAT LONG), REAL KNOWLEDGE AND INTUTION IS VERY IMPORTANT
+- RAG (the main purpose here)
+- C / CUDA / OpenCL - Learning to completely optimise and create chatgpt in raw C and CUDA showing you understand EVERYTHING
+
+
+
 Random notes
 
 # In order to generate more accurate tokens by validating and ranking outcomes:
