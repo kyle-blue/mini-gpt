@@ -4,7 +4,8 @@ import torch
 # Module with the building blocks for graphs (nns are actually DAGS)
 from torch import nn
 from torch.nn import functional as F
-from params import vocab_size, embedding_dim, block_size, device
+from model.attention_head import AttentionHead
+from params import vocab_size, embedding_dim, block_size, device, combined_head_size
 
 
 class GPT(nn.Module):
@@ -12,8 +13,10 @@ class GPT(nn.Module):
         super().__init__()
         self.embedding_table = nn.Embedding(vocab_size, embedding_dim)
         self.positional_embedding_table = nn.Embedding(block_size, embedding_dim)
-        # Final linear layer to convert embeddings into token probability distribution
-        self.lm_head = nn.Linear(embedding_dim, vocab_size)
+
+        self.attention_head = AttentionHead(combined_head_size)
+        # Final linear layer to convert outputs into logits
+        self.lm_head = nn.Linear(combined_head_size, vocab_size)
 
     def forward(self, batch_x: torch.Tensor, batch_y: Optional[torch.Tensor]):
         B, T = batch_x.shape
@@ -35,7 +38,8 @@ class GPT(nn.Module):
         # B, T, C   +   T, C   = B, T, C  (torch does broadcasting)
         summed_embeddings = embeddings + pos_embeddings
 
-        logits = self.lm_head.forward(summed_embeddings)
+        values = self.attention_head.forward(summed_embeddings)
+        logits = self.lm_head.forward(values)
 
         if batch_y is None:
             return logits, None
