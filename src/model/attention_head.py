@@ -36,7 +36,10 @@ class MultiHeadAttention(torch.nn.Module):
         self.heads = torch.nn.ModuleList(
             [AttentionHead(head_size) for _ in range(num_heads)]
         )
+        # I believe this is actually mainly a layer to convert / project between dimensions when head_size * num_heads is not equal to n_embed
+        self.proj = nn.Linear(n_embed, n_embed)
 
     def forward(self, batch_x: torch.Tensor):
         output = torch.cat([head.forward(batch_x) for head in self.heads], dim=-1)
+        output = self.proj.forward(output)
         return output

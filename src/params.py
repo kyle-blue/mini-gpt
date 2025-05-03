@@ -25,3 +25,4 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 n_embed = 32  # Number of embedding dimensions
 vocab_size = len(chars)
 num_heads = 4  # Head size of each head will be n_embed // num_heads
+feed_forward_scale_up = 4  # The multiplier by which we scale up the dimensions in the feed forward layer after each attention block to increase feature separation / extraction

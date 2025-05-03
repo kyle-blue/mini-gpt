@@ -11,6 +11,12 @@ Things to Learn:
 
 
 
+Learning backpropogation will help you understand:
+  - Vanishing and exploding gradient
+  - Residual connections, why residual connections help prevent diminishing gradients, and guarantee some sort of gradient during backpropogation
+     - For now, just remember that it allows each layer to simply add information onto the existing plane of information, rather than having to create entirely new information
+
+
 Random notes
 
 # In order to generate more accurate tokens by validating and ranking outcomes:

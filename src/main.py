@@ -84,7 +84,7 @@ def main():
         optimiser.step()
 
     start_x = torch.zeros((1, 1), dtype=torch.long, device=device)
-    tokens = model.generate(start_x, 100)
+    tokens = model.generate(start_x, 1000)
     print(decode(tokens.tolist()[0]))
 
 

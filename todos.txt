@@ -1,4 +1,5 @@
 - Finish mini shakespeare tutorial video
+  - CURRENT: Add dropout after every layer (make sure it only exists in training). Finish final model by adding multiple blocks, one final layer norm etc
 - Finish gpt2 tutorial video
 - Free recall, make notes on them
 - Learn numpy properly with a project:
