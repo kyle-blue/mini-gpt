@@ -5,7 +5,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from model.attention_head import MultiHeadAttention
-from params import vocab_size, n_embed, block_size, device, num_heads
+from model.transformer import Transformer
+from params import vocab_size, n_embed, block_size, device, num_heads, num_layers
 
 
 class GPT(nn.Module):
@@ -15,6 +16,12 @@ class GPT(nn.Module):
         self.positional_embedding_table = nn.Embedding(block_size, n_embed)
 
         self.mha_head = MultiHeadAttention(num_heads, n_embed // num_heads)
+        if n_embed // num_heads * num_heads != n_embed:
+            raise Exception(
+                f"num_heads ({num_heads}) is not a factor of n_embed ({n_embed}) which means there will be a shape mismatch"
+            )
+        self.layers = nn.Sequential(*[Transformer() for _ in range(num_layers)])
+        self.ln = nn.LayerNorm(n_embed)
         self.lm_head = nn.Linear(n_embed, vocab_size)
 
     def forward(self, batch_x: torch.Tensor, batch_y: Optional[torch.Tensor]):

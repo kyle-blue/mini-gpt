@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from params import n_embed, block_size
+from params import n_embed, block_size, dropout_factor
 
 
 class AttentionHead(torch.nn.Module):
@@ -12,6 +12,7 @@ class AttentionHead(torch.nn.Module):
         self.query_layer = nn.Linear(n_embed, head_size)
         self.value_layer = nn.Linear(n_embed, head_size)
         self.register_buffer("tril", torch.tril(torch.ones(block_size, block_size)))
+        self.dropout = nn.Dropout(dropout_factor)
 
     def forward(self, batch_x: torch.Tensor):
         _, T, _ = batch_x.shape  # B, T, C
@@ -20,10 +21,13 @@ class AttentionHead(torch.nn.Module):
         values = self.value_layer.forward(batch_x)
 
         # B, T, C   @   B, C, T  =   B, T, T
+
         wei = (queries @ keys.transpose(-2, -1)) / values.shape[-1] ** 0.5
         wei = torch.softmax(
             wei.masked_fill(self.tril[:T, :T] == 0, float("-inf")), dim=-1
         )
+        # Can do after wei @ values also, but this randomly prevents some of the tokens from communicating
+        wei = self.dropout.forward(wei)
 
         out = wei @ values
 
@@ -38,8 +42,10 @@ class MultiHeadAttention(torch.nn.Module):
         )
         # I believe this is actually mainly a layer to convert / project between dimensions when head_size * num_heads is not equal to n_embed
         self.proj = nn.Linear(n_embed, n_embed)
+        self.dropout = nn.Dropout(dropout_factor)
 
     def forward(self, batch_x: torch.Tensor):
         output = torch.cat([head.forward(batch_x) for head in self.heads], dim=-1)
         output = self.proj.forward(output)
+        output = self.dropout.forward(output)
         return output
