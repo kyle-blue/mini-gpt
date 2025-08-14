@@ -1,23 +1,19 @@
 # mini-gpt
 
-MiniGPT - GPT based on GPT-2.0 trained on FineWeb dataset
+MiniGPT - GPT trained on the works of shakespeare. Made as a proof-of-concept for understanding low level functions of original transformers / GPT from the original "attention is all you need" research paper.
 
 # Installation
 
 ## Pre-requisites
 
-- Install Poetry
-- Install pyenv
-
-Run:
-
-- `pyenv install 3.12.9`
-- `pyenv local 3.12.9`
-- `poetry install`
+- Install uv
 
 # Development
 
-To run the program use:
+Create a virtual environment using `uv venv -p 3.12.9`
 
-- `poetry run python src/main.py`
+Activate virtual environment using: `source ./.venv/bin/activate`
 
+Install dependencies using `uv sync`
+
+Run using `python3 src/main.py` while in venv
