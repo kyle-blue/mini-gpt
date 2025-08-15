@@ -15,9 +15,9 @@ chars = sorted(list(set(data_text)))
 torch.manual_seed(1234)
 
 # HYPERPARAMETERS
-batch_size = 64
+batch_size = 128
 block_size = 256
-training_iters = 10000
+training_iters = 3000
 eval_iters = 100
 eval_interval = 500
 learning_rate = 1e-3  # Apparently attention blocks can't handle larger learning rates. TODO: Maybe look into why?
