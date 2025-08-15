@@ -14,5 +14,5 @@ class FeedForward(nn.Module):
         )
 
     def forward(self, batch_x: torch.Tensor):
-        out = self.net(batch_x)
+        out = self.net.forward(batch_x)
         return out

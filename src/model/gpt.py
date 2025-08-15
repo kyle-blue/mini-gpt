@@ -15,11 +15,6 @@ class GPT(nn.Module):
         self.embedding_table = nn.Embedding(vocab_size, n_embed)
         self.positional_embedding_table = nn.Embedding(block_size, n_embed)
 
-        self.mha_head = MultiHeadAttention(num_heads, n_embed // num_heads)
-        if n_embed // num_heads * num_heads != n_embed:
-            raise Exception(
-                f"num_heads ({num_heads}) is not a factor of n_embed ({n_embed}) which means there will be a shape mismatch"
-            )
         self.layers = nn.Sequential(*[Transformer() for _ in range(num_layers)])
         self.ln = nn.LayerNorm(n_embed)
         self.lm_head = nn.Linear(n_embed, vocab_size)
@@ -44,7 +39,8 @@ class GPT(nn.Module):
         # B, T, C   +   T, C   = B, T, C  (torch does broadcasting)
         summed_embeddings = embeddings + pos_embeddings
 
-        values = self.mha_head.forward(summed_embeddings)
+        values = self.layers.forward(summed_embeddings)
+        values = self.ln.forward(values)
         logits = self.lm_head.forward(values)
 
         if batch_y is None:

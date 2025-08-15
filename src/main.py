@@ -24,6 +24,11 @@ class Split(Enum):
 
 
 def main():
+    if device == "cuda":
+        print("Cuda detected. Using GPU")
+    else:
+        print("Cuda not detected. Using CPU")
+
     # Extremely simple character level tokenizer
     stoi = {c: i for i, c in enumerate(chars)}
     itos = {i: c for i, c in enumerate(chars)}
